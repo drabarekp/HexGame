@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="New Game" 
+                    MouseLeftButtonDown="newGame_Clicked" 
+                    HorizontalAlignment="Stretch"/>
+                </TabItem.Header>
+            </TabItem>/>
+            <TabItem Header="TabItem"/>
+        </TabControl>
+        <Image HorizontalAlignment="Left" Height="100" Margin="107,226,0,0" VerticalAlignment="Top" Width="100" Name="mainGameView"/>
 
     </Grid>
 </Window>
