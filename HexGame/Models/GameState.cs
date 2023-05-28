@@ -36,5 +36,10 @@ namespace HexGame.Models
                 }
             }
         }
+
+        public void PlayerRedMove(int row, int column)
+        {
+            Board[row][column] = HexStateEnum.Red;
+        }
     }
 }
