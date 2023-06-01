@@ -52,9 +52,8 @@ namespace HexGame
             using (Graphics g = Graphics.FromImage(image))
             {
                 var ImageSize = new SD.Rectangle(0, 0, mainViewX, mainViewY);
-                g.FillRectangle(SD.Brushes.White, ImageSize);
 
-                topGameService.DrawGameFields(g);
+                topGameService.DrawGameFields(g, ImageSize);
             }
 
             mainGameView.Source = BitmapToImageSource(image);
