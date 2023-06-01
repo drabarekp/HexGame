@@ -60,12 +60,19 @@ namespace HexGame.GameServices
             return positions;
         }
 
-        public void DrawGameFields(Graphics g)
+        public void DrawGameFields(Graphics g, SD.Rectangle canvas)
         {
+            var result = GameState.GetGameResult();
+            switch (result)
+            {
+                case Enums.GameResultEnum.RedVictory: g.FillRectangle(SD.Brushes.IndianRed, canvas); break;
+                case Enums.GameResultEnum.BlueVictory: g.FillRectangle(SD.Brushes.RoyalBlue, canvas); break;
+                case Enums.GameResultEnum.InconclusiveYet: g.FillRectangle(SD.Brushes.White, canvas); break;
+            }
             
             var pen = new SD.Pen(SD.Color.Black, 8);
             var brushPlayer1 = new SD.SolidBrush(SD.Color.IndianRed);
-            var brushPlayer2 = new SD.SolidBrush(SD.Color.BlueViolet);
+            var brushPlayer2 = new SD.SolidBrush(SD.Color.RoyalBlue);
             var brushPlayerNone = new SD.SolidBrush(SD.Color.LightGray);
             int numberOfRows = GameState.Board.Length;
 
@@ -94,7 +101,7 @@ namespace HexGame.GameServices
                 {
                     if(Positions[i][j].Contains(new Point(x, y)))
                     {
-                        GameState.PlayerRedMove(i, j);
+                        GameState.PlayerMove(i, j);
                         break;
                     }
                 }

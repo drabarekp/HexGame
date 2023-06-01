@@ -1,4 +1,5 @@
 ﻿using HexGame.Enums;
+using HexGame.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace HexGame.Models
     {
         const int SIZE = 11;
         public HexStateEnum[][] Board { get; init; }
+        public HexStateEnum CurrentMove { get; private set; }
 
         public GameState()
         {
@@ -25,6 +27,7 @@ namespace HexGame.Models
             }
 
             InitializeBoard();
+            CurrentMove = HexStateEnum.Red;
         }
 
         private void InitializeBoard()
@@ -38,9 +41,20 @@ namespace HexGame.Models
             }
         }
 
-        public void PlayerRedMove(int row, int column)
+        public void PlayerMove(int row, int column)
         {
-            Board[row][column] = HexStateEnum.Red;
+            if (Board[row][column] != HexStateEnum.None) return;
+
+            Board[row][column] = CurrentMove;
+            
+            if(CurrentMove == HexStateEnum.Red)
+            {
+                CurrentMove = HexStateEnum.Blue;
+            }
+            else
+            {
+                CurrentMove = HexStateEnum.Red;
+            }
         }
 
         private HexStateEnum GetColor(GameField field)
@@ -72,8 +86,11 @@ namespace HexGame.Models
                 var redStack = new Stack<GameField>();
                 for (int i = 0; i < SIZE; i++)
                 {
-                    redStack.Push(new GameField(0, i));
-                    redVisited[0][i] = true;
+                    if (Board[0][i] == HexStateEnum.Red)
+                    {
+                        redStack.Push(new GameField(0, i));
+                        redVisited[0][i] = true;
+                    }
                 }
 
                 while (redStack.Count > 0)
@@ -101,8 +118,11 @@ namespace HexGame.Models
                 var blueStack = new Stack<GameField>();
                 for (int i = 0; i < SIZE; i++)
                 {
-                    blueStack.Push(new GameField(i, 0));
-                    blueVisited[i][0] = true;
+                    if (Board[i][0] == HexStateEnum.Blue)
+                    {
+                        blueStack.Push(new GameField(i, 0));
+                        blueVisited[i][0] = true;
+                    }
                 }
 
                 while (blueStack.Count > 0)
