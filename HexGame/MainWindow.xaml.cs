@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using HexGame.Enums;
 
 namespace HexGame
 {
@@ -60,8 +61,13 @@ namespace HexGame
 
         private void mainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (topGameService.GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
+
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
             UpdateBoard();
+
+            if (topGameService.GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
+
             topGameService.PerformAIMove();
             UpdateBoard();
         }

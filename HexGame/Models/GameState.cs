@@ -26,13 +26,22 @@ namespace HexGame.Models
 
         public object Clone() => new GameState(Board, CurrentMove, LastMove);
 
-        public double GetScore()
+        public double GetEndScore(PlayerEnum player)
         {
-            return 17;
-            // TODO
-            Random rand = new Random();
-            return rand.NextDouble();
-        } 
+            var result = GetGameResult();
+
+            if(player == PlayerEnum.Red)
+            {
+                return result == GameResultEnum.RedVictory ? 1 : 0;
+            }
+
+            if (player == PlayerEnum.Blue)
+            {
+                return result == GameResultEnum.BlueVictory ? 1 : 0;
+            }
+
+            throw new InvalidOperationException();
+        }
 
         public GameState GetNextState(GameMove move)
         {
@@ -44,6 +53,9 @@ namespace HexGame.Models
         public List<GameMove> GetPossibleMoves()
         {
             var possibleMoves = new List<GameMove>();
+
+            if (GetGameResult() != GameResultEnum.InconclusiveYet)
+                return possibleMoves;      
 
             for(int i = 0; i < Size; i++)
             {

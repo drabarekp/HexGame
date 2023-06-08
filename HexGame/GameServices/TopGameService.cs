@@ -1,6 +1,8 @@
 ﻿using HexGame.Engine;
 using HexGame.Models;
+using System;
 using System.Drawing;
+using HexGame.Enums;
 
 namespace HexGame.GameServices
 {
@@ -26,7 +28,7 @@ namespace HexGame.GameServices
 
             Positions = CreateGameFields();
 
-            Algorithm = new BasicMCTS(100, 1000);
+            Algorithm = new BasicMCTS(100, 3000, Math.Sqrt(2));
         }
 
         public void NewGame()
@@ -104,7 +106,7 @@ namespace HexGame.GameServices
 
         public void PerformAIMove()
         {
-            var botMove = Algorithm.CalculateNextMove(GameState);
+            var botMove = Algorithm.CalculateNextMove(GameState, PlayerEnum.Blue);
             GameState.PerformMove(botMove);
         }
 
