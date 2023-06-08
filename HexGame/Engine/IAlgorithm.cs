@@ -1,9 +1,10 @@
-﻿using HexGame.Models;
+﻿using HexGame.Enums;
+using HexGame.Models;
 
 namespace HexGame.Engine
 {
     internal interface IAlgorithm
     {
-        GameMove CalculateNextMove(GameState state);
+        GameMove CalculateNextMove(GameState state, PlayerEnum player);
     }
 }

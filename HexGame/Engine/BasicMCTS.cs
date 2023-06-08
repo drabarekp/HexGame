@@ -1,59 +1,70 @@
-﻿using HexGame.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using HexGame.Models;
+using HexGame.Enums;
 
 namespace HexGame.Engine
 {
     internal class BasicMCTS : IAlgorithm
     {
-        private Random Random = new();
-        private int Iterations = 1000;
-        private static readonly double ExplorationConstant = Math.Sqrt(2);
+        private readonly Random Random;
+        private readonly int Iterations;
+        private readonly double ExplorationConstant;
 
-        public BasicMCTS(int seed, int iterations)
+        private Node? root;
+        private PlayerEnum Player;
+
+        public BasicMCTS(int seed, int iterations, double explorationConstant)
         {
             Random = new Random(seed);
             Iterations = iterations;
+            ExplorationConstant = explorationConstant;
         }
 
-        public GameMove CalculateNextMove(GameState state)
+        public GameMove CalculateNextMove(GameState state, PlayerEnum player)
         {
-            Node rootNode = new((GameState)state.Clone());
+            root = new Node((GameState)state.Clone());
+            Player = player;
 
-            for (int i = 0; i < Iterations; i++)
+            for(int i = 0; i < Iterations; i++)
             {
-                Node node = SelectNode(rootNode);
-                double score = Simulate(node.State);
-                Backpropagate(node, score);
+                Node node = Selection();
+                double result = Simulation(node.State);
+                Backpropagation(node, result);
             }
 
-            Node bestChild = rootNode.Children.OrderByDescending(c => c.Visits).First();
-            return bestChild.State.LastMove;
+            return BestChild(root).State.LastMove;
         }
 
-        private Node SelectNode(Node rootNode)
+        private Node Selection()
         {
-            Node? node = rootNode;
+            Node? node = root;
 
-            while (!node!.State.IsTerminal() && node.IsFullyExpanded())
+            while (!node!.State.IsTerminal())
             {
+                if (!node.IsFullyExpanded())
+                {
+                    return Expansion(node);
+                }
+
                 node = node.SelectChild(ExplorationConstant);
-            }
-
-            if (!node.State.IsTerminal())
-            {
-                List<GameMove> untriedMoves = node.State.GetPossibleMoves().Except(node.Children.Select(c => c.State.LastMove)).ToList();
-                GameMove randomMove = untriedMoves[Random.Next(untriedMoves.Count)];
-                GameState newState = node.State.GetNextState(randomMove);
-                node = node.AddChild(newState);
             }
 
             return node;
         }
 
-        private double Simulate(GameState state)
+        private Node Expansion(Node node)
+        {
+            List<GameMove> untriedMoves = node.State.GetPossibleMoves().Except(node.Children.Select(c => c.State.LastMove)).ToList();
+            var newMove = untriedMoves[Random.Next(untriedMoves.Count)];
+            var newState = node.State.GetNextState(newMove);
+
+            return node.AddChild(newState);
+        }
+
+        private double Simulation(GameState state)
         {
             GameState currentState = (GameState)state.Clone();
 
@@ -64,17 +75,22 @@ namespace HexGame.Engine
                 currentState = currentState.GetNextState(randomMove);
             }
 
-            return currentState.GetScore();
+            return currentState.GetEndScore(Player);
         }
 
-        private void Backpropagate(Node? node, double score)
+        private void Backpropagation(Node? node, double result)
         {
             while (node != null)
             {
                 node.Visits++;
-                node.Wins += score;
+                node.Wins += result;
                 node = node.Parent;
             }
+        }
+
+        private Node BestChild(Node node)
+        {
+            return node.Children.OrderByDescending(child => child.Visits).First();
         }
     }
 }
