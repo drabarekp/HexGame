@@ -41,15 +41,15 @@ namespace HexGame
                     break;
 
                 case (int)AlgorithmTypeEnum.RAVE:
-                    AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
+                    AlgorithmType = AlgorithmTypeEnum.RAVE;
                     break;
 
                 case (int)AlgorithmTypeEnum.MAST:
-                    AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
+                    AlgorithmType = AlgorithmTypeEnum.MAST;
                     break;
 
                 case (int)AlgorithmTypeEnum.Heuristic:
-                    AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
+                    AlgorithmType = AlgorithmTypeEnum.Heuristic;
                     break;
             }
 
