@@ -14,7 +14,7 @@ namespace HexGame.GameServices
         public int Diameter;
         public int HalfDiameter => Diameter / 2;
 
-        private IAlgorithm Algorithm;
+        private readonly IAlgorithm Algorithm;
 
         public TopGameService(int viewWidth, int viewHeight)
         {

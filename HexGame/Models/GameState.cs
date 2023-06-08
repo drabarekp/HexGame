@@ -26,7 +26,13 @@ namespace HexGame.Models
 
         public object Clone() => new GameState(Board, CurrentMove, LastMove);
 
-        public double GetScore() => 1; // TODO
+        public double GetScore()
+        {
+            return 17;
+            // TODO
+            Random rand = new Random();
+            return rand.NextDouble();
+        } 
 
         public GameState GetNextState(GameMove move)
         {
@@ -67,6 +73,8 @@ namespace HexGame.Models
             {
                 CurrentMove = HexStateEnum.Red;
             }
+
+            LastMove = move;
         }
 
         public static GameField[] GetNeighbours(int row, int column)

@@ -20,9 +20,7 @@ namespace HexGame.Engine
 
         public GameMove CalculateNextMove(GameState state)
         {
-            GameState initialState = (GameState)state.Clone();
-
-            Node rootNode = new(initialState);
+            Node rootNode = new((GameState)state.Clone());
 
             for (int i = 0; i < Iterations; i++)
             {
