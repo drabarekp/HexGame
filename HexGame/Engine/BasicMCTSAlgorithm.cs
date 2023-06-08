@@ -7,7 +7,7 @@ using HexGame.Enums;
 
 namespace HexGame.Engine
 {
-    internal class BasicMCTS : IAlgorithm
+    internal class BasicMCTSAlgorithm : IAlgorithm
     {
         private readonly Random Random;
         private readonly int Iterations;
@@ -16,7 +16,7 @@ namespace HexGame.Engine
         private Node? root;
         private PlayerEnum Player;
 
-        public BasicMCTS(int seed, int iterations, double explorationConstant)
+        public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant)
         {
             Random = new Random(seed);
             Iterations = iterations;

@@ -14,8 +14,14 @@
                     MouseLeftButtonDown="newGame_Clicked" 
                     HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
-            </TabItem> />
-            <TabItem Header="TabItem"/>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="New Tournament" 
+                    MouseLeftButtonDown="newTournament_Clicked" 
+                    HorizontalAlignment="Stretch"/>
+                </TabItem.Header>
+            </TabItem>
         </TabControl>
         <Image HorizontalAlignment="Left" Height="659" Margin="0,30,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="mainGameView_MouseLeftButtonDown"/>
 

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using HexGame.Enums;
+using System;
 
 namespace HexGame
 {
@@ -23,8 +24,24 @@ namespace HexGame
 
         private void newGame_Clicked(object sender, MouseButtonEventArgs e)
         {
-            topGameService.NewGame();
+            var popup = new NewGamePopup();
+            popup.ShowDialog();
+
+            var random = new Random();
+
+            topGameService.NewGame(popup.Iterations, popup.IsPlayerStart, popup.AlgorithmType, random.Next());
             UpdateBoard();
+
+            if(!popup.IsPlayerStart) 
+            {
+                topGameService.PerformAIMove();
+                UpdateBoard();
+            }
+        }
+
+        private void newTournament_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            // TODO
         }
 
         private void UpdateBoard()
@@ -61,12 +78,8 @@ namespace HexGame
 
         private void mainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (topGameService.GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
-
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
             UpdateBoard();
-
-            if (topGameService.GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
 
             topGameService.PerformAIMove();
             UpdateBoard();
