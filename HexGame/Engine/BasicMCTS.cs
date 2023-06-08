@@ -8,12 +8,20 @@ namespace HexGame.Engine
 {
     internal class BasicMCTS : IAlgorithm
     {
-        private static readonly Random Random = new();
-        private static readonly int Iterations = 1000;
+        private Random Random = new();
+        private int Iterations = 1000;
         private static readonly double ExplorationConstant = Math.Sqrt(2);
 
-        public GameMove CalculateNextMove(GameState initialState)
+        public BasicMCTS(int seed, int iterations)
         {
+            Random = new Random(seed);
+            Iterations = iterations;
+        }
+
+        public GameMove CalculateNextMove(GameState state)
+        {
+            GameState initialState = (GameState)state.Clone();
+
             Node rootNode = new(initialState);
 
             for (int i = 0; i < Iterations; i++)

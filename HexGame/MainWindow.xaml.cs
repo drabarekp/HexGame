@@ -5,8 +5,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-using SD = System.Drawing;
-
 namespace HexGame
 {
     /// <summary>
@@ -32,11 +30,11 @@ namespace HexGame
         {
             int mainViewX = (int)mainGameView.Width;
             int mainViewY = (int)mainGameView.Height;
-            System.Drawing.Bitmap image = new SD.Bitmap(mainViewX, mainViewY);
+            var image = new Bitmap(mainViewX, mainViewY);
 
             using (Graphics g = Graphics.FromImage(image))
             {
-                var ImageSize = new SD.Rectangle(0, 0, mainViewX, mainViewY);
+                var ImageSize = new Rectangle(0, 0, mainViewX, mainViewY);
 
                 topGameService.DrawGameFields(g, ImageSize);
             }
@@ -63,6 +61,8 @@ namespace HexGame
         private void mainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
+            UpdateBoard();
+            topGameService.PerformAIMove();
             UpdateBoard();
         }
     }

@@ -24,21 +24,33 @@ namespace HexGame.Models
             CurrentMove = HexStateEnum.Red;
         }
 
-        public object Clone()
-        {
-            throw new NotImplementedException();
-        }
+        public object Clone() => new GameState(Board, CurrentMove, LastMove);
 
-        public double GetScore() => throw new NotImplementedException();
+        public double GetScore() => 1; // TODO
 
         public GameState GetNextState(GameMove move)
         {
-            throw new NotImplementedException();
+            var newState = (GameState)Clone();
+            newState.PerformMove(move);
+            return newState;
         }
 
         public List<GameMove> GetPossibleMoves()
         {
-            throw new NotImplementedException();
+            var possibleMoves = new List<GameMove>();
+
+            for(int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (Board[i][j] == HexStateEnum.None)
+                    {
+                        possibleMoves.Add(new GameMove(i, j));
+                    }
+                }
+            }
+
+            return possibleMoves;
         }
 
         public void PerformMove(GameMove move)
@@ -158,6 +170,26 @@ namespace HexGame.Models
                     Board[i][j] = HexStateEnum.None;
                 }
             }
+        }
+
+        private GameState(HexStateEnum[][] board, HexStateEnum currentMove, GameMove lastMove)
+        {
+            Board = new HexStateEnum[Size][];
+            for (int i = 0; i < Size; i++)
+            {
+                Board[i] = new HexStateEnum[Size];
+            }
+
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    Board[i][j] = board[i][j];
+                }
+            }
+
+            CurrentMove = currentMove;
+            LastMove = new(lastMove.Row, lastMove.Column);
         }
     }
 }
