@@ -1,24 +1,9 @@
 ﻿using HexGame.GameServices;
-using HexGame.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.IO;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 using SD = System.Drawing;
 
@@ -33,7 +18,7 @@ namespace HexGame
         public MainWindow()
         {
             InitializeComponent();
-            topGameService = new TopGameService((int)mainGameView.Width,  (int)mainGameView.Height);
+            topGameService = new TopGameService((int)mainGameView.Width, (int)mainGameView.Height);
         }
 
 
