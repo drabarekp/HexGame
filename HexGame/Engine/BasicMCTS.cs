@@ -6,16 +6,17 @@ using System.Linq;
 
 namespace HexGame.Engine
 {
-    internal class BasicMCTS
+    internal class BasicMCTS : IAlgorithm
     {
         private static readonly Random Random = new();
+        private static readonly int Iterations = 1000;
         private static readonly double ExplorationConstant = Math.Sqrt(2);
 
-        public static GameMove CalculateNextMove(GameState initialState, int iterations)
+        public GameMove CalculateNextMove(GameState initialState)
         {
             Node rootNode = new(initialState);
 
-            for (int i = 0; i < iterations; i++)
+            for (int i = 0; i < Iterations; i++)
             {
                 Node node = SelectNode(rootNode);
                 double score = Simulate(node.State);
@@ -26,7 +27,7 @@ namespace HexGame.Engine
             return bestChild.State.LastMove;
         }
 
-        private static Node SelectNode(Node rootNode)
+        private Node SelectNode(Node rootNode)
         {
             Node? node = rootNode;
 
@@ -46,7 +47,7 @@ namespace HexGame.Engine
             return node;
         }
 
-        private static double Simulate(GameState state)
+        private double Simulate(GameState state)
         {
             GameState currentState = (GameState)state.Clone();
 
@@ -60,7 +61,7 @@ namespace HexGame.Engine
             return currentState.GetScore();
         }
 
-        private static void Backpropagate(Node? node, double score)
+        private void Backpropagate(Node? node, double score)
         {
             while (node != null)
             {
