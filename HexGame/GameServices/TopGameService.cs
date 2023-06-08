@@ -3,6 +3,8 @@ using HexGame.Models;
 using System;
 using System.Drawing;
 using HexGame.Enums;
+using System.Windows.Controls.Primitives;
+using System.Windows;
 
 namespace HexGame.GameServices
 {
@@ -16,7 +18,9 @@ namespace HexGame.GameServices
         public int Diameter;
         public int HalfDiameter => Diameter / 2;
 
-        private readonly IAlgorithm Algorithm;
+        private IAlgorithm Algorithm = new BasicMCTSAlgorithm(100, 1000, Math.Sqrt(2));
+        private bool IsPlayerStart = true;
+        private bool MessageShown = false;
 
         public TopGameService(int viewWidth, int viewHeight)
         {
@@ -27,15 +31,33 @@ namespace HexGame.GameServices
             Diameter = viewHeight / (NumberOfRows) - (2 * Margin);
 
             Positions = CreateGameFields();
-
-            Algorithm = new BasicMCTS(100, 3000, Math.Sqrt(2));
         }
-
-        public void NewGame()
+        public void NewGame(int iterations, bool isPlayerStart, AlgorithmTypeEnum algorithmType, int seed)
         {
+            IsPlayerStart = isPlayerStart;
+            MessageShown = false;
+
+            switch(algorithmType)
+            {
+                case AlgorithmTypeEnum.BasicMCTS:
+                    Algorithm = new BasicMCTSAlgorithm(seed, iterations, Math.Sqrt(2));
+                    break;
+
+                case AlgorithmTypeEnum.RAVE:
+                    Algorithm = new RAVEAlgorithm(seed, iterations, Math.Sqrt(2));
+                    break;
+
+                case AlgorithmTypeEnum.MAST:
+                    Algorithm = new MASTAlgorithm(seed, iterations, Math.Sqrt(2));
+                    break;
+
+                case AlgorithmTypeEnum.Heuristic:
+                    Algorithm = new HeuristicAlgorithm();
+                    break;
+            }
+
             GameState = new GameState();
         }
-
         private Rectangle[][] CreateGameFields()
         {
 
@@ -59,11 +81,40 @@ namespace HexGame.GameServices
         public void DrawGameFields(Graphics g, Rectangle canvas)
         {
             var result = GameState.GetGameResult();
+
+            const string VictoryMessage = "Gratulacje, wygrałeś z AI";
+            const string DefeatMessage = "Niestety przegrałeś z AI";
+            const string Caption = "Koniec gry";
+
             switch (result)
             {
-                case Enums.GameResultEnum.RedVictory: g.FillRectangle(Brushes.IndianRed, canvas); break;
-                case Enums.GameResultEnum.BlueVictory: g.FillRectangle(Brushes.RoyalBlue, canvas); break;
-                case Enums.GameResultEnum.InconclusiveYet: g.FillRectangle(Brushes.White, canvas); break;
+                case GameResultEnum.RedVictory: 
+                    g.FillRectangle(Brushes.IndianRed, canvas);
+                    if(!MessageShown)
+                    {
+                        if (IsPlayerStart)
+                            MessageBox.Show(VictoryMessage, Caption, MessageBoxButton.OK);
+                        else
+                            MessageBox.Show(DefeatMessage, Caption, MessageBoxButton.OK);
+
+                        MessageShown = true;
+                    }
+                    break;
+
+                case GameResultEnum.BlueVictory: 
+                    g.FillRectangle(Brushes.RoyalBlue, canvas);
+                    if (!MessageShown)
+                    {
+                        if (IsPlayerStart)
+                            MessageBox.Show(DefeatMessage, Caption, MessageBoxButton.OK);
+                        else
+                            MessageBox.Show(VictoryMessage, Caption, MessageBoxButton.OK);
+
+                        MessageShown = true;
+                    }    
+                    break;
+
+                case GameResultEnum.InconclusiveYet: g.FillRectangle(Brushes.White, canvas); break;
             }
 
             var pen = new Pen(Color.Black, 8);
@@ -91,11 +142,13 @@ namespace HexGame.GameServices
 
         public void Click(int x, int y)
         {
+            if (GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
+
             for (int i = 0; i < NumberOfRows; i++)
             {
                 for (int j = 0; j < NumberOfRows; j++)
                 {
-                    if (Positions[i][j].Contains(new Point(x, y)))
+                    if (Positions[i][j].Contains(new System.Drawing.Point(x, y)))
                     {
                         GameState.PerformMove(new GameMove(i, j));
                         return;
@@ -106,6 +159,8 @@ namespace HexGame.GameServices
 
         public void PerformAIMove()
         {
+            if (GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
+
             var botMove = Algorithm.CalculateNextMove(GameState, PlayerEnum.Blue);
             GameState.PerformMove(botMove);
         }
