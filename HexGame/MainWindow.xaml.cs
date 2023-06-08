@@ -1,26 +1,10 @@
 ﻿using HexGame.GameServices;
-using HexGame.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.IO;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
-
-using SD = System.Drawing;
+using HexGame.Enums;
 
 namespace HexGame
 {
@@ -33,7 +17,7 @@ namespace HexGame
         public MainWindow()
         {
             InitializeComponent();
-            topGameService = new TopGameService((int)mainGameView.Width,  (int)mainGameView.Height);
+            topGameService = new TopGameService((int)mainGameView.Width, (int)mainGameView.Height);
         }
 
 
@@ -47,11 +31,11 @@ namespace HexGame
         {
             int mainViewX = (int)mainGameView.Width;
             int mainViewY = (int)mainGameView.Height;
-            System.Drawing.Bitmap image = new SD.Bitmap(mainViewX, mainViewY);
+            var image = new Bitmap(mainViewX, mainViewY);
 
             using (Graphics g = Graphics.FromImage(image))
             {
-                var ImageSize = new SD.Rectangle(0, 0, mainViewX, mainViewY);
+                var ImageSize = new Rectangle(0, 0, mainViewX, mainViewY);
 
                 topGameService.DrawGameFields(g, ImageSize);
             }
@@ -77,7 +61,14 @@ namespace HexGame
 
         private void mainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (topGameService.GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
+
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
+            UpdateBoard();
+
+            if (topGameService.GameState.GetGameResult() != GameResultEnum.InconclusiveYet) return;
+
+            topGameService.PerformAIMove();
             UpdateBoard();
         }
     }

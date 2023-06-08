@@ -1,38 +1,34 @@
-﻿using HexGame.Models;
-using System.Drawing;
+﻿using HexGame.Engine;
+using HexGame.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-
-using SD = System.Drawing;
-using System.Windows.Media;
-using HexGame.Helpers;
+using System.Drawing;
+using HexGame.Enums;
 
 namespace HexGame.GameServices
 {
     internal class TopGameService
     {
         public GameState GameState { get; private set; }
-        public SD.Rectangle[][] Positions { get; private set; }
+        public Rectangle[][] Positions { get; private set; }
 
-        int numberOfRows;
-        int MARGIN;
-        int DIAMETER;
-        int HALF_DIAMETER;
+        public int NumberOfRows;
+        public int Margin;
+        public int Diameter;
+        public int HalfDiameter => Diameter / 2;
+
+        private readonly IAlgorithm Algorithm;
 
         public TopGameService(int viewWidth, int viewHeight)
         {
             GameState = new GameState();
-            numberOfRows = GameState.Board.Length;
+            NumberOfRows = GameState.Board.Length;
 
-            MARGIN = 10;
-            DIAMETER = viewHeight / (numberOfRows) - (int)(2 * MARGIN);
-            HALF_DIAMETER = (int)(DIAMETER / 2);
+            Margin = 10;
+            Diameter = viewHeight / (NumberOfRows) - (2 * Margin);
 
             Positions = CreateGameFields();
+
+            Algorithm = new BasicMCTS(100, 3000, Math.Sqrt(2));
         }
 
         public void NewGame()
@@ -40,40 +36,40 @@ namespace HexGame.GameServices
             GameState = new GameState();
         }
 
-        private SD.Rectangle[][] CreateGameFields()
+        private Rectangle[][] CreateGameFields()
         {
 
-            var positions = new SD.Rectangle[numberOfRows][];
-            for (int i = 0; i < numberOfRows; i++)
+            var positions = new Rectangle[NumberOfRows][];
+            for (int i = 0; i < NumberOfRows; i++)
             {
-                positions[i] = new SD.Rectangle[numberOfRows];
+                positions[i] = new Rectangle[NumberOfRows];
             }
 
-            for (int i = 0; i < numberOfRows; i++)
+            for (int i = 0; i < NumberOfRows; i++)
             {
-                for (int j = 0; j < numberOfRows; j++)
+                for (int j = 0; j < NumberOfRows; j++)
                 {
-                    positions[i][j] = new SD.Rectangle(MARGIN + j * (DIAMETER + MARGIN) + i * HALF_DIAMETER, MARGIN + i * (DIAMETER + MARGIN), DIAMETER, DIAMETER);
+                    positions[i][j] = new Rectangle(Margin + j * (Diameter + Margin) + i * HalfDiameter, Margin + i * (Diameter + Margin), Diameter, Diameter);
                 }
             }
 
             return positions;
         }
 
-        public void DrawGameFields(Graphics g, SD.Rectangle canvas)
+        public void DrawGameFields(Graphics g, Rectangle canvas)
         {
             var result = GameState.GetGameResult();
             switch (result)
             {
-                case Enums.GameResultEnum.RedVictory: g.FillRectangle(SD.Brushes.IndianRed, canvas); break;
-                case Enums.GameResultEnum.BlueVictory: g.FillRectangle(SD.Brushes.RoyalBlue, canvas); break;
-                case Enums.GameResultEnum.InconclusiveYet: g.FillRectangle(SD.Brushes.White, canvas); break;
+                case Enums.GameResultEnum.RedVictory: g.FillRectangle(Brushes.IndianRed, canvas); break;
+                case Enums.GameResultEnum.BlueVictory: g.FillRectangle(Brushes.RoyalBlue, canvas); break;
+                case Enums.GameResultEnum.InconclusiveYet: g.FillRectangle(Brushes.White, canvas); break;
             }
-            
-            var pen = new SD.Pen(SD.Color.Black, 8);
-            var brushPlayer1 = new SD.SolidBrush(SD.Color.IndianRed);
-            var brushPlayer2 = new SD.SolidBrush(SD.Color.RoyalBlue);
-            var brushPlayerNone = new SD.SolidBrush(SD.Color.LightGray);
+
+            var pen = new Pen(Color.Black, 8);
+            var brushPlayer1 = new SolidBrush(Color.IndianRed);
+            var brushPlayer2 = new SolidBrush(Color.RoyalBlue);
+            var brushPlayerNone = new SolidBrush(Color.LightGray);
             int numberOfRows = GameState.Board.Length;
 
 
@@ -95,19 +91,25 @@ namespace HexGame.GameServices
 
         public void Click(int x, int y)
         {
-            for (int i = 0; i < numberOfRows; i++)
+            for (int i = 0; i < NumberOfRows; i++)
             {
-                for (int j = 0; j < numberOfRows; j++)
+                for (int j = 0; j < NumberOfRows; j++)
                 {
-                    if(Positions[i][j].Contains(new Point(x, y)))
+                    if (Positions[i][j].Contains(new Point(x, y)))
                     {
-                        GameState.PlayerMove(i, j);
-                        break;
+                        GameState.PerformMove(new GameMove(i, j));
+                        return;
                     }
                 }
             }
         }
 
-        
+        public void PerformAIMove()
+        {
+            var botMove = Algorithm.CalculateNextMove(GameState, PlayerEnum.Blue);
+            GameState.PerformMove(botMove);
+        }
+
+
     }
 }
