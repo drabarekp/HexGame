@@ -60,12 +60,13 @@ namespace HexGame.Engine
             return childNode;
         }
 
-        public double GetRAVEValue(GameMove move, double RaveValue, double Beta)
+        public double GetRAVEValue(GameMove move, double Beta)
         { 
+            double raveValue = 0;
             if (RaveWins.ContainsKey(move))
-                RaveValue = RaveWins[move] / Visits;
+                raveValue = RaveWins[move] / Visits;
 
-            return (1 - Beta) * (Wins / Visits) + Beta * RaveValue;
+            return  Beta * raveValue + (1 - Beta) * (Wins / Visits);
         }
 
 

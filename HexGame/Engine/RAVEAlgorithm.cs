@@ -4,25 +4,22 @@ namespace HexGame.Engine
 {
     internal class RAVEAlgorithm : BasicMCTSAlgorithm
     {
-        private readonly double RaveValue;
         private readonly double Beta;
 
         public override string AlgorithmName() => AlgorithmTypeEnum.RAVE.ToString();
 
 
-        public RAVEAlgorithm(int seed, int iterations, double explorationConstant, double raveValue = 0, double beta = 0.5) : base(seed, iterations, explorationConstant)
+        public RAVEAlgorithm(int seed, int iterations, double explorationConstant, double beta = 0.5) : base(seed, iterations, explorationConstant)
         {
-            RaveValue = raveValue;
             Beta = beta;
         }
 
-        public RAVEAlgorithm(int seed, int iterations, double raveValue = 0, double beta = 0.5) : base(seed, iterations)
+        public RAVEAlgorithm(int seed, int iterations, double beta = 0.5) : base(seed, iterations)
         {
-            RaveValue = raveValue;
             Beta = beta;
         }
 
-        public new IAlgorithm Copy(int seed) => new RAVEAlgorithm(seed, Iterations, ExplorationConstant, RaveValue, Beta);
+        public new IAlgorithm Copy(int seed) => new RAVEAlgorithm(seed, Iterations, ExplorationConstant, Beta);
 
         protected override void Backpropagation(Node? node, double result)
         {
@@ -50,7 +47,7 @@ namespace HexGame.Engine
 
             foreach (Node child in node.Children)
             {
-                double value = child.GetRAVEValue(node.State.LastMove, RaveValue, Beta);
+                double value = child.GetRAVEValue(node.State.LastMove, Beta);
 
                 if (value > bestValue)
                 {
