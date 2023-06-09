@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using HexGame.Enums;
 using HexGame.Models;
-using HexGame.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace HexGame.Engine
 {
@@ -16,7 +16,9 @@ namespace HexGame.Engine
         private Node? root;
         private PlayerEnum Player;
 
-        public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant)
+        public string AlgorithmName => AlgorithmTypeEnum.BasicMCTS.ToString();
+
+        public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant = 1.41421356237)
         {
             Random = new Random(seed);
             Iterations = iterations;
@@ -28,7 +30,7 @@ namespace HexGame.Engine
             root = new Node((GameState)state.Clone());
             Player = player;
 
-            for(int i = 0; i < Iterations; i++)
+            for (int i = 0; i < Iterations; i++)
             {
                 Node node = Selection();
                 double result = Simulation(node.State);
