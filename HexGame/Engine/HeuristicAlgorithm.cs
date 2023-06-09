@@ -6,7 +6,7 @@ namespace HexGame.Engine
 {
     internal class HeuristicAlgorithm : IAlgorithm
     {
-        public string AlgorithmName => AlgorithmTypeEnum.Heuristic.ToString();
+        public string AlgorithmName() => AlgorithmTypeEnum.Heuristic.ToString();
 
         public GameMove CalculateNextMove(GameState state, PlayerEnum player)
         {

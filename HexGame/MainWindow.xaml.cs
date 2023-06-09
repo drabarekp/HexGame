@@ -115,7 +115,7 @@ namespace HexGame
                 var simulationRunner = new SimulationRunner(algorithm1, algorithm2, repetitions);
                 int algorithm1Wins = simulationRunner.RunSimulations(seed);
 
-                UpdateResults(algorithm1.AlgorithmName, algorithm2.AlgorithmName, algorithm1Wins, repetitions);
+                UpdateResults(algorithm1.AlgorithmName(), algorithm2.AlgorithmName(), algorithm1Wins, repetitions);
 
                 HideAIProcessing();
             }));
@@ -135,12 +135,12 @@ namespace HexGame
         private void UpdateResults(string algorithm1Name, string algorithm2Name, int algorithm1Wins, int repetitions)
         {
             Algorithm1Label.Content = algorithm1Name;
-            Algorithm1WinsLabel.Content = algorithm1Wins;
-            Algorithm1DefeatsLabel.Content = repetitions - algorithm1Wins;
+            Algorithm1WinsLabel.Content = $"Wygrane: {algorithm1Wins}";
+            Algorithm1DefeatsLabel.Content = $"Przegrane: {repetitions - algorithm1Wins}";
 
             Algorithm2Label.Content = algorithm2Name;
-            Algorithm2WinsLabel.Content = repetitions - algorithm1Wins;
-            Algorithm2DefeatsLabel.Content = algorithm1Wins;
+            Algorithm2WinsLabel.Content = $"Wygrane: {repetitions - algorithm1Wins}";
+            Algorithm2DefeatsLabel.Content = $"Przegrane: {algorithm1Wins}";
         }
 
         private static IAlgorithm SetAlgorithm(int index, int iterations, int seed)
@@ -151,13 +151,13 @@ namespace HexGame
                     return new BasicMCTSAlgorithm(seed, iterations);
 
                 case (int)AlgorithmTypeEnum.RAVE:
-                    return new BasicMCTSAlgorithm(seed, iterations);
+                    return new RAVEAlgorithm(seed, iterations);
 
                 case (int)AlgorithmTypeEnum.MAST:
-                    return new BasicMCTSAlgorithm(seed, iterations);
+                    return new MASTAlgorithm(seed, iterations);
 
                 case (int)AlgorithmTypeEnum.Heuristic:
-                    return new BasicMCTSAlgorithm(seed, iterations);
+                    return new HeuristicAlgorithm();
                 default:
                     break;
             }

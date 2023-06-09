@@ -5,9 +5,10 @@ namespace HexGame.Engine
 {
     internal interface IAlgorithm
     {
-        string AlgorithmName { get; }
-        GameMove CalculateNextMove(GameState state, PlayerEnum player);
+        public string AlgorithmName();
 
-        IAlgorithm Copy(int seed);
+        public GameMove CalculateNextMove(GameState state, PlayerEnum player);
+
+        public IAlgorithm Copy(int seed);
     }
 }

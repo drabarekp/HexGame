@@ -16,7 +16,7 @@ namespace HexGame.Engine
         protected Node? root;
         protected PlayerEnum Player;
 
-        public string AlgorithmName => AlgorithmTypeEnum.BasicMCTS.ToString();
+        public virtual string AlgorithmName() => AlgorithmTypeEnum.BasicMCTS.ToString();
 
         public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant = 1.41421356237)
         {
@@ -95,6 +95,9 @@ namespace HexGame.Engine
 
         private Node BestChild(Node node)
         {
+            if (node.Children.Count == 0)
+                return node;
+
             return node.Children.OrderByDescending(child => child.Visits).First();
         }
     }

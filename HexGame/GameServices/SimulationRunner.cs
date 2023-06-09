@@ -20,67 +20,62 @@ namespace HexGame.GameServices
 
         public int RunSimulations(int seed)
         {
-            int wins = 0;
+            int firstAlgorithmWins = 0;
             var winsLock = new object();
 
             Parallel.For(0, Repetitions, i =>
-            {
-                var playerStarting = (PlayerEnum)(i % 2);
+            {  
                 var newAlgorithm1 = Algorithm1.Copy(i * seed);
                 var newAlgorithm2 = Algorithm2.Copy(i * seed);
-                var gameState = new GameState();
+                
 
-                var result = RunSimulation(gameState, newAlgorithm1, newAlgorithm2, playerStarting);
-
-                if (playerStarting == PlayerEnum.Red && result == GameResultEnum.RedVictory ||
-                    playerStarting == PlayerEnum.Blue && result == GameResultEnum.BlueVictory)
+                // każdy algorytm zaczyna w połowie gier
+                if(i % 2 == 0)
                 {
-                    lock (winsLock)
+                    var result = RunSimulation(newAlgorithm1, newAlgorithm2);
+
+                    if(result == GameResultEnum.RedVictory)
                     {
-                        wins++;
+                        lock(winsLock)
+                        {
+                            ++firstAlgorithmWins;
+                        }
+                    }
+                }
+                else
+                {
+                    var result = RunSimulation(newAlgorithm2, newAlgorithm1);
+
+                    if (result == GameResultEnum.BlueVictory)
+                    {
+                        lock (winsLock)
+                        {
+                            ++firstAlgorithmWins;
+                        }
                     }
                 }
 
             });
 
-            return wins;
+            return firstAlgorithmWins;
         }
 
-        private static GameResultEnum RunSimulation(GameState gameState, IAlgorithm algorithm1, IAlgorithm algorithm2, PlayerEnum playerStarting)
+        private static GameResultEnum RunSimulation(IAlgorithm algorithm1, IAlgorithm algorithm2)
         {
+            var gameState = new GameState();
             GameResultEnum result;
 
-            if (playerStarting == PlayerEnum.Red)
+            while (true)
             {
-                while (true)
-                {
-                    result = gameState.GetGameResult();
+                result = gameState.GetGameResult();
 
-                    if (result != GameResultEnum.InconclusiveYet) break;
+                if (result != GameResultEnum.InconclusiveYet) break;
 
-                    var move1 = algorithm1.CalculateNextMove(gameState, playerStarting);
-                    gameState.PerformMove(move1);
+                var move1 = algorithm1.CalculateNextMove(gameState, PlayerEnum.Red);
+                gameState.PerformMove(move1);
 
-                    var move2 = algorithm2.CalculateNextMove(gameState, playerStarting);
-                    gameState.PerformMove(move2);
-                }
-            }
-            else
-            {
-                while (true)
-                {
-                    result = gameState.GetGameResult();
-
-                    if (result != GameResultEnum.InconclusiveYet) break;
-
-                    var move1 = algorithm2.CalculateNextMove(gameState, playerStarting);
-                    gameState.PerformMove(move1);
-
-                    var move2 = algorithm1.CalculateNextMove(gameState, playerStarting);
-                    gameState.PerformMove(move2);
-
-                }
-
+                var move2 = algorithm2.CalculateNextMove(gameState, PlayerEnum.Blue);
+                gameState.PerformMove(move2);
             }
 
             return result;
