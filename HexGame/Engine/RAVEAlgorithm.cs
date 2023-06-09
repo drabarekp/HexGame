@@ -1,4 +1,6 @@
-﻿using HexGame.Enums;
+﻿using HexGame.Engine.Nodes;
+using HexGame.Enums;
+using HexGame.Models;
 
 namespace HexGame.Engine
 {
@@ -21,33 +23,40 @@ namespace HexGame.Engine
 
         public new IAlgorithm Copy(int seed) => new RAVEAlgorithm(seed, Iterations, ExplorationConstant, Beta);
 
-        protected override void Backpropagation(Node? node, double result)
-        {
-            while (node != null)
-            {
-                node.Visits++;
-                node.Wins += result;
+        public override INode CreateRoot(GameState state) => new RaveNode((GameState)state.Clone());
 
-                if (node.Parent != null)
+        protected override void Backpropagation(INode? node, double result)
+        {
+            var rNode = (RaveNode?)node;
+
+            while (rNode != null)
+            {
+                rNode.Visits++;
+                rNode.Wins += result;
+
+                var rNodeParent = (RaveNode?)rNode.Parent;
+
+                if (rNodeParent != null)
                 {
-                    if (node.Parent.RaveWins.ContainsKey(node.State.LastMove))
-                        node.Parent.RaveWins[node.State.LastMove] += result;
+
+                    if (rNodeParent.RaveWins.ContainsKey(rNode.State.LastMove))
+                        rNodeParent.RaveWins[rNode.State.LastMove] += result;
                     else
-                        node.Parent.RaveWins[node.State.LastMove] = result;
+                        rNodeParent.RaveWins[rNode.State.LastMove] = result;
                 }
 
-                node = node.Parent;
+                rNode = rNodeParent;
             }
         }
 
-        protected override Node BestChild(Node node)
+        protected override INode BestChild(INode node)
         {
-            Node? bestChild = null;
+            INode? bestChild = null;
             double bestValue = double.NegativeInfinity;
 
-            foreach (Node child in node.Children)
+            foreach (INode child in node.Children)
             {
-                double value = child.GetRAVEValue(node.State.LastMove, Beta);
+                double value = child.Q(ExplorationConstant);
 
                 if (value > bestValue)
                 {
