@@ -30,7 +30,7 @@ namespace HexGame.Models
         {
             var result = GetGameResult();
 
-            if(player == PlayerEnum.Red)
+            if (player == PlayerEnum.Red)
             {
                 return result == GameResultEnum.RedVictory ? 1 : 0;
             }
@@ -55,9 +55,9 @@ namespace HexGame.Models
             var possibleMoves = new List<GameMove>();
 
             if (GetGameResult() != GameResultEnum.InconclusiveYet)
-                return possibleMoves;      
+                return possibleMoves;
 
-            for(int i = 0; i < Size; i++)
+            for (int i = 0; i < Size; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
