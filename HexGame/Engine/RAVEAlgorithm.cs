@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HexGame.Enums;
 
 namespace HexGame.Engine
 {
     internal class RAVEAlgorithm : BasicMCTSAlgorithm
     {
+        public override string AlgorithmName() => AlgorithmTypeEnum.RAVE.ToString();
+
         public RAVEAlgorithm(int seed, int iterations, double explorationConstant) : base(seed, iterations, explorationConstant)
         {
         }
+
+        public RAVEAlgorithm(int seed, int iterations) : base(seed, iterations)
+        {
+        }
+
+        public new IAlgorithm Copy(int seed) => new RAVEAlgorithm(seed, Iterations, ExplorationConstant);
     }
 }

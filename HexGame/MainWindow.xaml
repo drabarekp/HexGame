@@ -5,25 +5,67 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HexGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1500" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="730" Width="1100" WindowStartupLocation="CenterScreen">
     <Grid>
-        <TabControl>
+        <StatusBar VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="AIStatusBar" Text="Proszę czekać"/>
+            </StatusBarItem>
+        </StatusBar>
+        <TabControl Margin="0,0,0,20">
             <TabItem>
                 <TabItem.Header>
-                    <Label Content="New Game" 
-                    MouseLeftButtonDown="newGame_Clicked" 
+                    <Label Content="Nowa gra" 
+                    MouseLeftButtonDown="NewGame_Clicked" 
                     HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
+                <Image HorizontalAlignment="Left" Height="650" Margin="0,0,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="MainGameView_MouseLeftButtonDown" Stretch="Fill"/>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <Label Content="New Tournament" 
-                    MouseLeftButtonDown="newTournament_Clicked" 
+                    <Label Content="Nowy test" 
                     HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
+                <Grid>
+                    <GroupBox Header="Parametry" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="270">
+                        <Grid>
+                            <Label Content="Algorytm 1:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                            <ComboBox Name="Algorithm1TypeComboBox" HorizontalAlignment="Left" Margin="86,12,0,0" VerticalAlignment="Top" Width="140">
+                                <ComboBoxItem IsSelected="True">Podstawowy MCTS</ComboBoxItem>
+                                <ComboBoxItem>Rave</ComboBoxItem>
+                                <ComboBoxItem>MAST</ComboBoxItem>
+                                <ComboBoxItem>Heurystyczny</ComboBoxItem>
+                            </ComboBox>
+                            <Label Content="Algorytm 2:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="Algorithm2TypeComboBox" HorizontalAlignment="Left" Margin="86,52,0,0" VerticalAlignment="Top" Width="140">
+                                <ComboBoxItem Content="Podstawowy MCTS"/>
+                                <ComboBoxItem IsSelected="True" Content="Rave"/>
+                                <ComboBoxItem Content="MAST"/>
+                                <ComboBoxItem Content="Heurystyczny"/>
+                            </ComboBox>
+                            <Label Content="Ilość iteracji:" HorizontalAlignment="Left" Margin="9,86,0,0" VerticalAlignment="Top"/>
+                            <TextBox x:Name="IterationsTextBox" HorizontalAlignment="Left" Margin="86,90,0,0" TextWrapping="Wrap" Text="1000" VerticalAlignment="Top" Width="120"/>
+                            <Label Content="Ilość powtórzeń:" HorizontalAlignment="Left" Margin="9,121,0,0" VerticalAlignment="Top"/>
+                            <TextBox x:Name="RepetitionsTextBox" HorizontalAlignment="Left" Margin="110,125,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="120"/>
+                            <Label Content="Seed:" HorizontalAlignment="Left" Margin="9,154,0,0" VerticalAlignment="Top"/>
+                            <TextBox x:Name="SeedTextBox" HorizontalAlignment="Left" Margin="53,158,0,0" TextWrapping="Wrap" Text="1717" VerticalAlignment="Top" Width="120"/>
+                            <Button Name="StartSimulationButton" Content="Rozpocznij symulację" HorizontalAlignment="Left" Margin="88,215,0,0" VerticalAlignment="Top" Click="StartSimulationButton_Click"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Wyniki" Margin="0,275,0,0" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Grid>
+                            <Label Name="Algorithm1Label" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="114"/>
+                            <Label x:Name="Algorithm1WinsLabel" Content="" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="114"/>
+                            <Label x:Name="Algorithm1DefeatsLabel" Content="" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="114"/>
+                            <Label x:Name="Algorithm2Label" Content="" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Width="114"/>
+                            <Label x:Name="Algorithm2WinsLabel" Content="" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Width="114"/>
+                            <Label x:Name="Algorithm2DefeatsLabel" Content="" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top" Width="114"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
             </TabItem>
         </TabControl>
-        <Image HorizontalAlignment="Left" Height="659" Margin="0,30,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="mainGameView_MouseLeftButtonDown"/>
+
 
     </Grid>
 </Window>

@@ -1,17 +1,5 @@
 ﻿using HexGame.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace HexGame
 {
@@ -34,22 +22,22 @@ namespace HexGame
             Iterations = int.Parse(IterationsTextBox.Text);
             IsPlayerStart = (bool)PlayerStartCheckBox.IsChecked!;
 
-            switch(AlgorithmTypeComboBox.SelectedIndex)
+            switch (AlgorithmTypeComboBox.SelectedIndex)
             {
                 case (int)AlgorithmTypeEnum.BasicMCTS:
                     AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
                     break;
 
                 case (int)AlgorithmTypeEnum.RAVE:
-                    AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
+                    AlgorithmType = AlgorithmTypeEnum.RAVE;
                     break;
 
                 case (int)AlgorithmTypeEnum.MAST:
-                    AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
+                    AlgorithmType = AlgorithmTypeEnum.MAST;
                     break;
 
                 case (int)AlgorithmTypeEnum.Heuristic:
-                    AlgorithmType = AlgorithmTypeEnum.BasicMCTS;
+                    AlgorithmType = AlgorithmTypeEnum.Heuristic;
                     break;
             }
 

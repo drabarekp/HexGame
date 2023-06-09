@@ -1,24 +1,27 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using HexGame.Enums;
 using HexGame.Models;
-using HexGame.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HexGame.Engine
 {
     internal class BasicMCTSAlgorithm : IAlgorithm
     {
-        private readonly Random Random;
-        private readonly int Iterations;
-        private readonly double ExplorationConstant;
+        protected readonly int Seed;
+        protected readonly Random Random;
+        protected readonly int Iterations;
+        protected readonly double ExplorationConstant;
 
-        private Node? root;
-        private PlayerEnum Player;
+        protected Node? root;
+        protected PlayerEnum Player;
 
-        public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant)
+        public virtual string AlgorithmName() => AlgorithmTypeEnum.BasicMCTS.ToString();
+
+        public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant = 1.41421356237)
         {
-            Random = new Random(seed);
+            Seed = seed;
+            Random = new Random(Seed);
             Iterations = iterations;
             ExplorationConstant = explorationConstant;
         }
@@ -28,7 +31,7 @@ namespace HexGame.Engine
             root = new Node((GameState)state.Clone());
             Player = player;
 
-            for(int i = 0; i < Iterations; i++)
+            for (int i = 0; i < Iterations; i++)
             {
                 Node node = Selection();
                 double result = Simulation(node.State);
@@ -37,6 +40,8 @@ namespace HexGame.Engine
 
             return BestChild(root).State.LastMove;
         }
+
+        public IAlgorithm Copy(int seed) => new BasicMCTSAlgorithm(seed, Iterations, ExplorationConstant);
 
         private Node Selection()
         {
@@ -90,6 +95,9 @@ namespace HexGame.Engine
 
         private Node BestChild(Node node)
         {
+            if (node.Children.Count == 0)
+                return node;
+
             return node.Children.OrderByDescending(child => child.Visits).First();
         }
     }

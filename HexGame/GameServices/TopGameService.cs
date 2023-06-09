@@ -1,9 +1,8 @@
 ﻿using HexGame.Engine;
+using HexGame.Enums;
 using HexGame.Models;
 using System;
 using System.Drawing;
-using HexGame.Enums;
-using System.Windows.Controls.Primitives;
 using System.Windows;
 
 namespace HexGame.GameServices
@@ -37,18 +36,18 @@ namespace HexGame.GameServices
             IsPlayerStart = isPlayerStart;
             MessageShown = false;
 
-            switch(algorithmType)
+            switch (algorithmType)
             {
                 case AlgorithmTypeEnum.BasicMCTS:
-                    Algorithm = new BasicMCTSAlgorithm(seed, iterations, Math.Sqrt(2));
+                    Algorithm = new BasicMCTSAlgorithm(seed, iterations);
                     break;
 
                 case AlgorithmTypeEnum.RAVE:
-                    Algorithm = new RAVEAlgorithm(seed, iterations, Math.Sqrt(2));
+                    Algorithm = new RAVEAlgorithm(seed, iterations);
                     break;
 
                 case AlgorithmTypeEnum.MAST:
-                    Algorithm = new MASTAlgorithm(seed, iterations, Math.Sqrt(2));
+                    Algorithm = new MASTAlgorithm(seed, iterations);
                     break;
 
                 case AlgorithmTypeEnum.Heuristic:
@@ -88,9 +87,9 @@ namespace HexGame.GameServices
 
             switch (result)
             {
-                case GameResultEnum.RedVictory: 
+                case GameResultEnum.RedVictory:
                     g.FillRectangle(Brushes.IndianRed, canvas);
-                    if(!MessageShown)
+                    if (!MessageShown)
                     {
                         if (IsPlayerStart)
                             MessageBox.Show(VictoryMessage, Caption, MessageBoxButton.OK);
@@ -101,7 +100,7 @@ namespace HexGame.GameServices
                     }
                     break;
 
-                case GameResultEnum.BlueVictory: 
+                case GameResultEnum.BlueVictory:
                     g.FillRectangle(Brushes.RoyalBlue, canvas);
                     if (!MessageShown)
                     {
@@ -111,7 +110,7 @@ namespace HexGame.GameServices
                             MessageBox.Show(VictoryMessage, Caption, MessageBoxButton.OK);
 
                         MessageShown = true;
-                    }    
+                    }
                     break;
 
                 case GameResultEnum.InconclusiveYet: g.FillRectangle(Brushes.White, canvas); break;
