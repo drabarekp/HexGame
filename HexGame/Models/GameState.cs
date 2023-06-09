@@ -7,7 +7,7 @@ namespace HexGame.Models
 {
     internal class GameState : ICloneable
     {
-        const int Size = 9;
+        const int Size = 11;
         public HexStateEnum[][] Board { get; init; }
         public HexStateEnum CurrentMove { get; private set; }
         public GameMove LastMove { get; private set; }
