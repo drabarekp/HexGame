@@ -1,7 +1,9 @@
-﻿using HexGame.Enums;
+﻿using HexGame.Engine.Nodes;
+using HexGame.Enums;
 using HexGame.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace HexGame.Engine
@@ -13,8 +15,18 @@ namespace HexGame.Engine
         protected readonly int Iterations;
         protected readonly double ExplorationConstant;
 
-        protected Node? root;
+        protected INode? root;
         protected PlayerEnum Player;
+
+        public INode? Parent => throw new NotImplementedException();
+
+        public List<INode> Children => throw new NotImplementedException();
+
+        public int Visits => throw new NotImplementedException();
+
+        public double Wins => throw new NotImplementedException();
+
+        public GameState State => throw new NotImplementedException();
 
         public virtual string AlgorithmName() => AlgorithmTypeEnum.BasicMCTS.ToString();
 
@@ -28,12 +40,12 @@ namespace HexGame.Engine
 
         public virtual GameMove CalculateNextMove(GameState state, PlayerEnum player)
         {
-            root = new Node((GameState)state.Clone());
+            root = CreateRoot(state);
             Player = player;
 
             for (int i = 0; i < Iterations; i++)
             {
-                Node node = Selection();
+                INode node = Selection();
                 double result = Simulation(node.State);
                 Backpropagation(node, result);
             }
@@ -41,11 +53,13 @@ namespace HexGame.Engine
             return BestChild(root).State.LastMove;
         }
 
+        public virtual INode CreateRoot(GameState state) => new Node((GameState)state.Clone());
+
         public IAlgorithm Copy(int seed) => new BasicMCTSAlgorithm(seed, Iterations, ExplorationConstant);
 
-        private Node Selection()
+        private INode Selection()
         {
-            Node? node = root;
+            INode? node = root;
 
             while (!node!.State.IsTerminal())
             {
@@ -54,13 +68,13 @@ namespace HexGame.Engine
                     return Expansion(node);
                 }
 
-                node = node.SelectChild(ExplorationConstant);
+                node = SelectChild(node);
             }
 
             return node;
         }
 
-        protected virtual Node Expansion(Node node)
+        protected virtual INode Expansion(INode node)
         {
             List<GameMove> untriedMoves = node.State.GetPossibleMoves().Except(node.Children.Select(c => c.State.LastMove)).ToList();
             var newMove = untriedMoves[Random.Next(untriedMoves.Count)];
@@ -83,7 +97,7 @@ namespace HexGame.Engine
             return currentState.GetEndScore(Player);
         }
 
-        protected virtual void Backpropagation(Node? node, double result)
+        protected virtual void Backpropagation(INode? node, double result)
         {
             while (node != null)
             {
@@ -93,12 +107,31 @@ namespace HexGame.Engine
             }
         }
 
-        protected virtual Node BestChild(Node node)
+        protected virtual INode BestChild(INode node)
         {
             if (node.Children.Count == 0)
                 return node;
 
             return node.Children.OrderByDescending(child => child.Visits).First();
+        }
+
+        public INode? SelectChild(INode node)
+        {
+            INode? bestChild = null;
+            double bestScore = double.MinValue;
+
+            foreach (var child in node.Children)
+            {
+                double score = child.Q(ExplorationConstant);
+                
+                if (score > bestScore)
+                {
+                    bestChild = child;
+                    bestScore = score;
+                }
+            }
+
+            return bestChild;
         }
     }
 }
