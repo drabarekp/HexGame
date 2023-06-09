@@ -17,7 +17,7 @@ namespace HexGame
     /// </summary>
     public partial class MainWindow : Window
     {
-        TopGameService topGameService;
+        readonly TopGameService topGameService;
         public MainWindow()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace HexGame
         }
 
 
-        private void newGame_Clicked(object sender, MouseButtonEventArgs e)
+        private void NewGame_Clicked(object sender, MouseButtonEventArgs e)
         {
             var popup = new NewGamePopup();
             popup.ShowDialog();
@@ -59,23 +59,21 @@ namespace HexGame
             mainGameView.Source = BitmapToImageSource(image);
         }
 
-        BitmapImage BitmapToImageSource(Bitmap bitmap)
+        static BitmapImage BitmapToImageSource(Bitmap bitmap)
         {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
+            using MemoryStream memory = new();
+            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+            memory.Position = 0;
+            var bitmapimage = new BitmapImage();
+            bitmapimage.BeginInit();
+            bitmapimage.StreamSource = memory;
+            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapimage.EndInit();
 
-                return bitmapimage;
-            }
+            return bitmapimage;
         }
 
-        private void mainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
             UpdateBoard();
@@ -115,7 +113,7 @@ namespace HexGame
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, (ThreadStart)(() =>
             {
                 var simulationRunner = new SimulationRunner(algorithm1, algorithm2, repetitions);
-                int algorithm1Wins = simulationRunner.RunSimulations();
+                int algorithm1Wins = simulationRunner.RunSimulations(seed);
 
                 UpdateResults(algorithm1.AlgorithmName, algorithm2.AlgorithmName, algorithm1Wins, repetitions);
 
@@ -145,7 +143,7 @@ namespace HexGame
             Algorithm2DefeatsLabel.Content = algorithm1Wins;
         }
 
-        private IAlgorithm SetAlgorithm(int index, int iterations, int seed)
+        private static IAlgorithm SetAlgorithm(int index, int iterations, int seed)
         {
             switch (index)
             {
@@ -160,6 +158,8 @@ namespace HexGame
 
                 case (int)AlgorithmTypeEnum.Heuristic:
                     return new BasicMCTSAlgorithm(seed, iterations);
+                default:
+                    break;
             }
 
             throw new InvalidOperationException();

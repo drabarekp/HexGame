@@ -16,10 +16,10 @@
             <TabItem>
                 <TabItem.Header>
                     <Label Content="Nowa gra" 
-                    MouseLeftButtonDown="newGame_Clicked" 
+                    MouseLeftButtonDown="NewGame_Clicked" 
                     HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
-                <Image HorizontalAlignment="Left" Height="650" Margin="0,0,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="mainGameView_MouseLeftButtonDown" Stretch="Fill"/>
+                <Image HorizontalAlignment="Left" Height="650" Margin="0,0,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="MainGameView_MouseLeftButtonDown" Stretch="Fill"/>
             </TabItem>
             <TabItem>
                 <TabItem.Header>

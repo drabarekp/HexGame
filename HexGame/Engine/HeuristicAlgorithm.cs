@@ -13,6 +13,6 @@ namespace HexGame.Engine
             throw new NotImplementedException();
         }
 
-        public IAlgorithm Copy() => new HeuristicAlgorithm();
+        public IAlgorithm Copy(int seed) => new HeuristicAlgorithm();
     }
 }

@@ -2,17 +2,14 @@
 using HexGame.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Windows.Controls;
 
 namespace HexGame.Engine
 {
     internal class BasicMCTSAlgorithm : IAlgorithm
     {
-        protected readonly Random Random;
         protected readonly int Seed;
+        protected readonly Random Random;
         protected readonly int Iterations;
         protected readonly double ExplorationConstant;
 
@@ -44,7 +41,7 @@ namespace HexGame.Engine
             return BestChild(root).State.LastMove;
         }
 
-        public IAlgorithm Copy() => new BasicMCTSAlgorithm(2 * Seed, Iterations, ExplorationConstant);
+        public IAlgorithm Copy(int seed) => new BasicMCTSAlgorithm(seed, Iterations, ExplorationConstant);
 
         private Node Selection()
         {

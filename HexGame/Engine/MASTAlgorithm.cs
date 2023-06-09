@@ -14,6 +14,6 @@ namespace HexGame.Engine
         {
         }
 
-        public new IAlgorithm Copy() => new MASTAlgorithm(2 * Seed, Iterations, ExplorationConstant);
+        public new IAlgorithm Copy(int seed) => new MASTAlgorithm(seed, Iterations, ExplorationConstant);
     }
 }
