@@ -122,6 +122,18 @@ namespace HexGame.GameServices
             var brushPlayerNone = new SolidBrush(Color.LightGray);
             int numberOfRows = GameState.Board.Length;
 
+            var TL = new System.Drawing.Point(5, 5);
+            var TR = new System.Drawing.Point(canvas.Width / 2, 5);
+            var BL = new System.Drawing.Point(200, canvas.Height - 100);
+            var BR = new System.Drawing.Point(canvas.Width / 2 + 200, canvas.Height - 100);
+
+            g.DrawLine(new Pen(brushPlayer1, 5), TL, TR);
+            g.DrawLine(new Pen(brushPlayer1, 5), BL, BR);
+            g.DrawLine(new Pen(brushPlayer2, 5), TL, BL);
+            g.DrawLine(new Pen(brushPlayer2, 5), TR, BR);
+
+
+
 
             for (int i = 0; i < numberOfRows; i++)
             {
