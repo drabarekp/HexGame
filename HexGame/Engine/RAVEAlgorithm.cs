@@ -13,5 +13,7 @@ namespace HexGame.Engine
         public RAVEAlgorithm(int seed, int iterations) : base(seed, iterations)
         {
         }
+
+        public new IAlgorithm Copy() => new RAVEAlgorithm(2 * Seed, Iterations, ExplorationConstant);
     }
 }

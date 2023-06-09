@@ -7,5 +7,7 @@ namespace HexGame.Engine
     {
         string AlgorithmName { get; }
         GameMove CalculateNextMove(GameState state, PlayerEnum player);
+
+        IAlgorithm Copy();
     }
 }

@@ -2,25 +2,29 @@
 using HexGame.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Windows.Controls;
 
 namespace HexGame.Engine
 {
     internal class BasicMCTSAlgorithm : IAlgorithm
     {
-        private readonly Random Random;
-        private readonly int Iterations;
-        private readonly double ExplorationConstant;
+        protected readonly Random Random;
+        protected readonly int Seed;
+        protected readonly int Iterations;
+        protected readonly double ExplorationConstant;
 
-        private Node? root;
-        private PlayerEnum Player;
+        protected Node? root;
+        protected PlayerEnum Player;
 
         public string AlgorithmName => AlgorithmTypeEnum.BasicMCTS.ToString();
 
         public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant = 1.41421356237)
         {
-            Random = new Random(seed);
+            Seed = seed;
+            Random = new Random(Seed);
             Iterations = iterations;
             ExplorationConstant = explorationConstant;
         }
@@ -39,6 +43,8 @@ namespace HexGame.Engine
 
             return BestChild(root).State.LastMove;
         }
+
+        public IAlgorithm Copy() => new BasicMCTSAlgorithm(2 * Seed, Iterations, ExplorationConstant);
 
         private Node Selection()
         {

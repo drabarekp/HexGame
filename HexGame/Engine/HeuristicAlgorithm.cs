@@ -12,5 +12,7 @@ namespace HexGame.Engine
         {
             throw new NotImplementedException();
         }
+
+        public IAlgorithm Copy() => new HeuristicAlgorithm();
     }
 }
