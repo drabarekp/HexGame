@@ -17,7 +17,9 @@ namespace HexGame
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly TopGameService topGameService;
+        private readonly TopGameService topGameService;
+        private bool AIRunning;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -75,6 +77,9 @@ namespace HexGame
 
         private void MainGameView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (AIRunning)
+                return;
+
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
             UpdateBoard();
 
@@ -90,12 +95,14 @@ namespace HexGame
         private void ShowAIProcessing()
         {
             AIStatusBar.Text = "AI myśli, proszę czekać.";
+            AIRunning = true;
 
         }
 
         private void HideAIProcessing()
         {
             AIStatusBar.Text = "Program gotowy";
+            AIRunning = false;
         }
 
         private void StartSimulationButton_Click(object sender, RoutedEventArgs e)

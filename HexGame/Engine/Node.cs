@@ -1,6 +1,7 @@
 ﻿using HexGame.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace HexGame.Engine
 {
@@ -12,6 +13,8 @@ namespace HexGame.Engine
         public double Wins;
         public GameState State;
 
+        public Dictionary<GameMove, double> RaveWins;
+
         public Node(GameState state)
         {
             this.State = state;
@@ -19,6 +22,8 @@ namespace HexGame.Engine
             Children = new List<Node>();
             Visits = 0;
             Wins = 0;
+
+            RaveWins = new Dictionary<GameMove, double>();
         }
 
         public bool IsFullyExpanded()
@@ -54,5 +59,16 @@ namespace HexGame.Engine
             Children.Add(childNode);
             return childNode;
         }
+
+        public double GetRAVEValue(GameMove move, double Beta)
+        { 
+            double raveValue = 0;
+            if (RaveWins.ContainsKey(move))
+                raveValue = RaveWins[move] / Visits;
+
+            return  Beta * raveValue + (1 - Beta) * (Wins / Visits);
+        }
+
+
     }
 }

@@ -26,7 +26,7 @@ namespace HexGame.Engine
             ExplorationConstant = explorationConstant;
         }
 
-        public GameMove CalculateNextMove(GameState state, PlayerEnum player)
+        public virtual GameMove CalculateNextMove(GameState state, PlayerEnum player)
         {
             root = new Node((GameState)state.Clone());
             Player = player;
@@ -60,7 +60,7 @@ namespace HexGame.Engine
             return node;
         }
 
-        private Node Expansion(Node node)
+        protected virtual Node Expansion(Node node)
         {
             List<GameMove> untriedMoves = node.State.GetPossibleMoves().Except(node.Children.Select(c => c.State.LastMove)).ToList();
             var newMove = untriedMoves[Random.Next(untriedMoves.Count)];
@@ -69,7 +69,7 @@ namespace HexGame.Engine
             return node.AddChild(newState);
         }
 
-        private double Simulation(GameState state)
+        protected virtual double Simulation(GameState state)
         {
             GameState currentState = (GameState)state.Clone();
 
@@ -83,7 +83,7 @@ namespace HexGame.Engine
             return currentState.GetEndScore(Player);
         }
 
-        private void Backpropagation(Node? node, double result)
+        protected virtual void Backpropagation(Node? node, double result)
         {
             while (node != null)
             {
@@ -93,7 +93,7 @@ namespace HexGame.Engine
             }
         }
 
-        private Node BestChild(Node node)
+        protected virtual Node BestChild(Node node)
         {
             if (node.Children.Count == 0)
                 return node;
