@@ -5,15 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HexGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1500" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="730" Width="1100" WindowStartupLocation="CenterScreen">
     <Grid>
-        <TabControl>
+        <StatusBar VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="AIStatusBar" Text="Prosze czekac"/>
+            </StatusBarItem>
+        </StatusBar>
+        <TabControl Margin="0,0,0,20">
             <TabItem>
                 <TabItem.Header>
                     <Label Content="New Game" 
                     MouseLeftButtonDown="newGame_Clicked" 
                     HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
+                <Image HorizontalAlignment="Left" Height="650" Margin="0,0,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="mainGameView_MouseLeftButtonDown" Stretch="Fill"/>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
@@ -21,9 +27,10 @@
                     MouseLeftButtonDown="newTournament_Clicked" 
                     HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
+                <TextBlock>XDD</TextBlock>
             </TabItem>
         </TabControl>
-        <Image HorizontalAlignment="Left" Height="659" Margin="0,30,0,0" VerticalAlignment="Top" Width="1100" Name="mainGameView" MouseLeftButtonDown="mainGameView_MouseLeftButtonDown"/>
+        
 
     </Grid>
 </Window>

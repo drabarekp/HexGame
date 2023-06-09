@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using HexGame.Enums;
 using System;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace HexGame
 {
@@ -19,6 +21,7 @@ namespace HexGame
         {
             InitializeComponent();
             topGameService = new TopGameService((int)mainGameView.Width, (int)mainGameView.Height);
+            HideAIProcessing();
         }
 
 
@@ -81,8 +84,25 @@ namespace HexGame
             topGameService.Click((int)e.GetPosition(mainGameView).X, (int)e.GetPosition(mainGameView).Y);
             UpdateBoard();
 
-            topGameService.PerformAIMove();
-            UpdateBoard();
+            ShowAIProcessing();
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, (ThreadStart)(() =>
+            {
+                
+                topGameService.PerformAIMove();
+                UpdateBoard();
+                HideAIProcessing();
+            }));   
+        }
+
+        private void ShowAIProcessing()
+        {
+            AIStatusBar.Text = "AI myśli, proszę czekać.";
+            
+        }
+
+        private void HideAIProcessing()
+        {
+            AIStatusBar.Text = "Program gotowy";
         }
     }
 }
