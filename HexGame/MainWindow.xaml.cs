@@ -164,7 +164,7 @@ namespace HexGame
                     return new MASTAlgorithm(seed, iterations);
 
                 case (int)AlgorithmTypeEnum.Heuristic:
-                    return new HeuristicAlgorithm();
+                    return new HeuristicAlgorithm(seed, iterations);
                 default:
                     break;
             }
