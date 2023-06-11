@@ -13,5 +13,16 @@ namespace HexGame.Engine.Nodes
         {
         }
 
+        public override INode AddChild(GameState childState)
+        {
+            var childNode = new MASTNode(childState)
+            {
+                Parent = this
+            };
+
+            Children.Add(childNode);
+            return childNode;
+        }
+
     }
 }

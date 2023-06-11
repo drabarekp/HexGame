@@ -51,7 +51,7 @@ namespace HexGame.GameServices
                     break;
 
                 case AlgorithmTypeEnum.Heuristic:
-                    Algorithm = new HeuristicAlgorithm(seed, iterations);
+                    Algorithm = new HeuristicAlgorithm(iterations);
                     break;
             }
 

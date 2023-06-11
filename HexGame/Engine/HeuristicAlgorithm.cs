@@ -9,16 +9,20 @@ using System.Xml.Linq;
 
 namespace HexGame.Engine
 {
-    internal class HeuristicAlgorithm : BasicMCTSAlgorithm
+    internal class HeuristicAlgorithm : IAlgorithm
     {
-        public override string AlgorithmName() => AlgorithmTypeEnum.Heuristic.ToString();
+        public readonly int Iterations;
 
-        public HeuristicAlgorithm(int seed, int iterations) : base(seed, iterations)
+        public HeuristicAlgorithm(int iterations)
         {
-
+            Iterations = iterations;
         }
 
-        public override GameMove CalculateNextMove(GameState state, PlayerEnum player)
+        public string AlgorithmName() => AlgorithmTypeEnum.Heuristic.ToString();
+
+        public IAlgorithm Copy(int seed) => new HeuristicAlgorithm(Iterations);
+
+        public GameMove CalculateNextMove(GameState state, PlayerEnum player)
         {
             var root = new HeuristicNode((GameState)state.Clone());
 
@@ -47,12 +51,12 @@ namespace HexGame.Engine
             if(player == PlayerEnum.Red)
             {
                 var maxChild = root.Children.MaxBy(n => ((HeuristicNode)n).Heuristic);
-                return maxChild.State.LastMove;
+                return maxChild!.State.LastMove;
             }
             else if(player == PlayerEnum.Blue)
             {
                 var minChild = root.Children.MinBy(n => ((HeuristicNode)n).Heuristic);
-                return minChild.State.LastMove;
+                return minChild!.State.LastMove;
             }
 
             throw new ArgumentException();

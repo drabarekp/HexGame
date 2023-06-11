@@ -39,9 +39,5 @@ namespace HexGame.Engine.Nodes
             Children.Add(childNode);
             return childNode;
         }
-
-
-
-
     }
 }
