@@ -48,15 +48,30 @@ namespace HexGame.Engine
 
             MinMaxRecursively(root);
 
-            if(player == PlayerEnum.Red)
+            try
             {
-                var maxChild = root.Children.MaxBy(n => ((HeuristicNode)n).Heuristic);
-                return maxChild!.State.LastMove;
+                if (player == PlayerEnum.Red)
+                {
+                    var maxChild = root.Children.MaxBy(n => ((HeuristicNode)n).Heuristic);
+                    return maxChild!.State.LastMove;
+                }
+                else if (player == PlayerEnum.Blue)
+                {
+                    var minChild = root.Children.MinBy(n => ((HeuristicNode)n).Heuristic);
+                    return minChild!.State.LastMove;
+                }
             }
-            else if(player == PlayerEnum.Blue)
+            catch(Exception e)
             {
-                var minChild = root.Children.MinBy(n => ((HeuristicNode)n).Heuristic);
-                return minChild!.State.LastMove;
+                if (root.State is not null)
+                {
+                    var moves = root.State.GetPossibleMoves();
+                    if(moves.Count > 0)
+                        return moves[0];
+
+                    //error
+                    return new GameMove(0, 0);
+                }
             }
 
             throw new ArgumentException();
