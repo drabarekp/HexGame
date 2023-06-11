@@ -18,16 +18,6 @@ namespace HexGame.Engine
         protected INode? root;
         protected PlayerEnum Player;
 
-        public INode? Parent => throw new NotImplementedException();
-
-        public List<INode> Children => throw new NotImplementedException();
-
-        public int Visits => throw new NotImplementedException();
-
-        public double Wins => throw new NotImplementedException();
-
-        public GameState State => throw new NotImplementedException();
-
         public virtual string AlgorithmName() => AlgorithmTypeEnum.BasicMCTS.ToString();
 
         public BasicMCTSAlgorithm(int seed, int iterations, double explorationConstant = 1.41421356237)
